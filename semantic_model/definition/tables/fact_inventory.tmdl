@@ -1,0 +1,57 @@
+table fact_inventory
+	lineageTag: cdef985e-6e97-4a5f-8e48-f14f1009cccc
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 12afd3d6-94b5-4afb-9636-a679a23123e5
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: dateTime
+		formatString: dd.mm.yyyy
+		lineageTag: 86cd9539-4308-420b-bf75-1a6547d5271d
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column units
+		dataType: int64
+		formatString: 0
+		lineageTag: 138783aa-9cb8-403d-a6ad-0653bf7b2f17
+		summarizeBy: sum
+		sourceColumn: units
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_inventory = m
+		mode: import
+		queryGroup: 03_Facts
+		source =
+				let
+				    Źródło = inventory,
+				    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(Źródło, [PromoteAllScalars=true]),
+				    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"ProductName", type text}, {"2025-01", Int64.Type}, {"2025-02", Int64.Type}, {"2025-03", Int64.Type}, {"2025-04", Int64.Type}, {"2025-05", Int64.Type}, {"2025-06", Int64.Type}, {"2025-07", Int64.Type}, {"2025-08", Int64.Type}, {"2025-09", Int64.Type}, {"2025-10", Int64.Type}, {"2025-11", Int64.Type}, {"2025-12", Int64.Type}}),
+				    #"Anulowano przestawienie kolumn" = Table.UnpivotOtherColumns(#"Zmieniono typ", {"ProductName"}, "Atrybut", "Wartość"),
+				    #"Zmieniono typ1" = Table.TransformColumnTypes(#"Anulowano przestawienie kolumn",{{"Atrybut", type date}}),
+				    #"Scalone zapytania" = Table.NestedJoin(#"Zmieniono typ1", {"ProductName"}, dim_product, {"product_name"}, "dim_product", JoinKind.LeftOuter),
+				    #"Rozwinięty element dim_product" = Table.ExpandTableColumn(#"Scalone zapytania", "dim_product", {"product_key"}, {"dim_product.product_key"}),
+				    #"Zmieniono kolejność kolumn" = Table.ReorderColumns(#"Rozwinięty element dim_product",{"dim_product.product_key", "ProductName", "Atrybut", "Wartość"}),
+				    #"Zmieniono nazwy kolumn" = Table.RenameColumns(#"Zmieniono kolejność kolumn",{{"dim_product.product_key", "product_key"}}),
+				    #"Usunięto kolumny" = Table.RemoveColumns(#"Zmieniono nazwy kolumn",{"ProductName"}),
+				    #"Zmieniono nazwy kolumn1" = Table.RenameColumns(#"Usunięto kolumny",{{"Atrybut", "month"}, {"Wartość", "units"}})
+				in
+				    #"Zmieniono nazwy kolumn1"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+

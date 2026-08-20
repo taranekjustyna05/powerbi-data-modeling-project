@@ -1,0 +1,156 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "578dd431537ee1832213",
+  "position": {
+    "x": 81.666666666666671,
+    "y": 63.333333333333336,
+    "z": 0,
+    "height": 546.66666666666674,
+    "width": 726.66666666666674,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "dim_date"
+                            }
+                          },
+                          "Name": "Odmiana",
+                          "Property": "date"
+                        }
+                      },
+                      "Hierarchy": "Hierarchia dat"
+                    }
+                  },
+                  "Level": "Rok"
+                }
+              },
+              "queryRef": "dim_date.Date.Odmiana.Hierarchia dat.Rok",
+              "nativeQueryRef": "Date Rok"
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "dim_date"
+                            }
+                          },
+                          "Name": "Odmiana",
+                          "Property": "date"
+                        }
+                      },
+                      "Hierarchy": "Hierarchia dat"
+                    }
+                  },
+                  "Level": "Kwartał"
+                }
+              },
+              "queryRef": "dim_date.Date.Odmiana.Hierarchia dat.Kwartał",
+              "nativeQueryRef": "Date Kwartał"
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "dim_date"
+                            }
+                          },
+                          "Name": "Odmiana",
+                          "Property": "date"
+                        }
+                      },
+                      "Hierarchy": "Hierarchia dat"
+                    }
+                  },
+                  "Level": "Miesiąc"
+                }
+              },
+              "queryRef": "dim_date.Date.Odmiana.Hierarchia dat.Miesiąc",
+              "nativeQueryRef": "Date Miesiąc"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_sales"
+                        }
+                      },
+                      "Property": "line_total"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fact_sales.line_total)",
+              "nativeQueryRef": "Suma elementów line_total"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_sales_targets"
+                        }
+                      },
+                      "Property": "target_revenue"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fact_sales_targets.target_revenue)",
+              "nativeQueryRef": "Suma elementów target_revenue"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_inventory"
+                        }
+                      },
+                      "Property": "units"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fact_inventory.units)",
+              "nativeQueryRef": "Suma elementów units"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

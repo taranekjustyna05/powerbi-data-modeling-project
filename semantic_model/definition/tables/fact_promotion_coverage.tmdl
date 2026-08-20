@@ -1,0 +1,47 @@
+table fact_promotion_coverage
+	lineageTag: 857bdd07-499d-4ebf-aa77-e98525be686b
+
+	column campaign_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 338c645c-da64-4b5a-90de-15fce131bbad
+		summarizeBy: none
+		sourceColumn: campaign_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 46bf72c1-819d-4f1f-aa3f-1ead5ab20881
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_promotion_coverage = m
+		mode: import
+		queryGroup: 03_Facts
+		source =
+				let
+				    Źródło = campaign_skus,
+				    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(Źródło, [PromoteAllScalars=true]),
+				    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CampaignName", type text}, {"PromotedSKUs", type text}}),
+				    #"Podzielono kolumnę według ogranicznika" = Table.ExpandListColumn(Table.TransformColumns(#"Zmieniono typ", {{"PromotedSKUs", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), let itemType = (type nullable text) meta [Serialized.Text = true] in type {itemType}}}), "PromotedSKUs"),
+				    #"Zmieniono typ1" = Table.TransformColumnTypes(#"Podzielono kolumnę według ogranicznika",{{"PromotedSKUs", type text}}),
+				    #"Przycięty tekst" = Table.TransformColumns(#"Zmieniono typ1",{{"PromotedSKUs", Text.Trim, type text}}),
+				    #"Scalone zapytania" = Table.NestedJoin(#"Przycięty tekst", {"CampaignName"}, dim_campaign, {"campaign_name"}, "dim_campaign", JoinKind.LeftOuter),
+				    #"Rozwinięty element dim_campaign" = Table.ExpandTableColumn(#"Scalone zapytania", "dim_campaign", {"campaign_key"}, {"dim_campaign.campaign_key"}),
+				    #"Zmieniono kolejność kolumn" = Table.ReorderColumns(#"Rozwinięty element dim_campaign",{"dim_campaign.campaign_key", "CampaignName", "PromotedSKUs"}),
+				    #"Scalone zapytania1" = Table.NestedJoin(#"Zmieniono kolejność kolumn", {"PromotedSKUs"}, dim_product, {"product_code"}, "dim_product", JoinKind.LeftOuter),
+				    #"Rozwinięty element dim_product" = Table.ExpandTableColumn(#"Scalone zapytania1", "dim_product", {"product_key"}, {"dim_product.product_key"}),
+				    #"Zmieniono kolejność kolumn1" = Table.ReorderColumns(#"Rozwinięty element dim_product",{"dim_campaign.campaign_key", "dim_product.product_key", "CampaignName", "PromotedSKUs"}),
+				    #"Usunięto kolumny" = Table.RemoveColumns(#"Zmieniono kolejność kolumn1",{"CampaignName", "PromotedSKUs"}),
+				    #"Zmieniono nazwy kolumn" = Table.RenameColumns(#"Usunięto kolumny",{{"dim_campaign.campaign_key", "campaign_key"}, {"dim_product.product_key", "product_key"}})
+				in
+				    #"Zmieniono nazwy kolumn"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
