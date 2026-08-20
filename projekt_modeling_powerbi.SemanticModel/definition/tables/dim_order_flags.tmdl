@@ -1,0 +1,70 @@
+table dim_order_flags
+	lineageTag: 3bed5a75-c9d2-4dc7-8b0b-5bc37abc3027
+
+	column flag_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 25d7c308-a9b1-4dd8-8daf-15a6bfbb0d3e
+		summarizeBy: none
+		sourceColumn: flag_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel
+		dataType: string
+		lineageTag: d0ff79e5-1f7b-4000-b8cd-68bddf10c5d2
+		summarizeBy: none
+		sourceColumn: channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: b4320b3a-8541-4a71-b01b-91ff2129480c
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority
+		dataType: string
+		lineageTag: ab498999-972b-4204-bbfa-ee5f0f88bedd
+		summarizeBy: none
+		sourceColumn: priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_code
+		dataType: int64
+		formatString: 0
+		lineageTag: fa5057d2-6df8-4e4c-8b56-74332bd3f0d8
+		summarizeBy: none
+		sourceColumn: channel_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_order_flags = m
+		mode: import
+		queryGroup: 02_Dimensions
+		source =
+				let
+				    Źródło = orders,
+				    #"Usunięto kolumny" = Table.RemoveColumns(Źródło,{"OrderID", "CustomerName", "CustomerCity", "RegionName", "ShipToCity", "BillToCity", "OrderDate", "OrderTotal"}),
+				    #"Usunięto duplikaty" = Table.Distinct(#"Usunięto kolumny"),
+				    #"Dodano indeks" = Table.AddIndexColumn(#"Usunięto duplikaty", "Indeks", 0, 1, Int64.Type),
+				    #"Usunięto kolumny1" = Table.RemoveColumns(#"Dodano indeks",{"Indeks"}),
+				    #"Dodano indeks1" = Table.AddIndexColumn(#"Usunięto kolumny1", "Indeks", 1, 1, Int64.Type),
+				    #"Zmieniono nazwy kolumn" = Table.RenameColumns(#"Dodano indeks1",{{"Indeks", "flag_key"}}),
+				    #"Zmieniono kolejność kolumn" = Table.ReorderColumns(#"Zmieniono nazwy kolumn",{"flag_key", "OrderChannel", "Status", "Priority"}),
+				    #"Zmieniono nazwy kolumn1" = Table.RenameColumns(#"Zmieniono kolejność kolumn",{{"Status", "status"}, {"Priority", "priority"}}),
+				    #"Scalone zapytania" = Table.NestedJoin(#"Zmieniono nazwy kolumn1", {"OrderChannel"}, channels, {"channel_code"}, "channels", JoinKind.LeftOuter),
+				    #"Rozwinięty element channels" = Table.ExpandTableColumn(#"Scalone zapytania", "channels", {"channel_name"}, {"channels.channel_name"}),
+				    #"Zmieniono kolejność kolumn1" = Table.ReorderColumns(#"Rozwinięty element channels",{"flag_key", "OrderChannel", "channels.channel_name", "status", "priority"}),
+				    #"Zmieniono nazwy kolumn2" = Table.RenameColumns(#"Zmieniono kolejność kolumn1",{{"OrderChannel", "channel_code"}, {"channels.channel_name", "channel"}})
+				in
+				    #"Zmieniono nazwy kolumn2"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+

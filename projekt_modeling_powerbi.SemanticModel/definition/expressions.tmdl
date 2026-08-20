@@ -1,0 +1,324 @@
+expression Address =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    Address_Sheet = Źródło{[Item="Address",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(Address_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"AddressID", Int64.Type}, {"Street", type text}, {"CityName", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 2708cb89-58c0-4cf8-a61c-e75bcaa5f80d
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression cities =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    cities_Sheet = Źródło{[Item="cities",Kind="Sheet"]}[Data],
+		    #"Zmieniono typ" = Table.TransformColumnTypes(cities_Sheet,{{"Column1", type text}, {"Column2", type text}}),
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(#"Zmieniono typ", [PromoteAllScalars=true]),
+		    #"Zmieniono typ1" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CityName", type text}, {"RegionName", type text}})
+		in
+		    #"Zmieniono typ1"
+	lineageTag: f8d5ad56-88c6-4f38-bd96-f5510e4b9364
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression CUST_MASTER =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    CUST_MASTER_Sheet = Źródło{[Item="CUST_MASTER",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(CUST_MASTER_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CustomerID", Int64.Type}, {"CustomerName", type text}, {"Segment", type text}, {"AddressID", Int64.Type}, {"AccountManager", type text}, {"PaymentTerms", type text}, {"hash_key", type text}, {"source_id", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 466b22b0-52d5-4677-86e5-2acc86e7f826
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression customer_contacts =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    customer_contacts_Sheet = Źródło{[Item="customer_contacts",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(customer_contacts_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CustomerID", Int64.Type}, {"ContactName", type text}, {"Email", type text}, {"IsPrimary", type logical}}),
+		    #"Przefiltrowano wiersze" = Table.SelectRows(#"Zmieniono typ", each ([IsPrimary] = true))
+		in
+		    #"Przefiltrowano wiersze"
+	lineageTag: e2d1e723-2024-4640-a8a3-8bfcc8575d3a
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression regions =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    regions_Sheet = Źródło{[Item="regions",Kind="Sheet"]}[Data],
+		    #"Zmieniono typ" = Table.TransformColumnTypes(regions_Sheet,{{"Column1", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: f2bf306c-11bf-475a-b298-078fd37a7d1e
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression user_details =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    user_details_Sheet = Źródło{[Item="user_details",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(user_details_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"UserID", Int64.Type}, {"CreditLimit", Int64.Type}, {"Phone", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 62450c17-87ce-412d-a00d-a59020ddde2a
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression products =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    products_Sheet = Źródło{[Item="products",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(products_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"ProductCode", type text}, {"ProductName", type text}, {"Brand", type text}, {"SubcategoryName", type text}, {"UnitPrice", type number}, {"PrimarySupplier", type text}, {"ProductDescription", type text}, {"hash_key", type text}, {"source_id", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 36cb4489-93a0-4996-b605-172a100ade4a
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression subcategories =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    subcategories_Sheet = Źródło{[Item="subcategories",Kind="Sheet"]}[Data],
+		    #"Zmieniono typ" = Table.TransformColumnTypes(subcategories_Sheet,{{"Column1", type text}}),
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(#"Zmieniono typ", [PromoteAllScalars=true]),
+		    #"Zmieniono typ1" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CategorySubcategory", type text}}),
+		    #"Podzielono kolumnę według ogranicznika" = Table.SplitColumn(#"Zmieniono typ1", "CategorySubcategory", Splitter.SplitTextByDelimiter("|", QuoteStyle.Csv), {"CategorySubcategory.1", "CategorySubcategory.2"}),
+		    #"Zmieniono typ2" = Table.TransformColumnTypes(#"Podzielono kolumnę według ogranicznika",{{"CategorySubcategory.1", type text}, {"CategorySubcategory.2", type text}}),
+		    #"Zmieniono nazwy kolumn" = Table.RenameColumns(#"Zmieniono typ2",{{"CategorySubcategory.1", "category"}, {"CategorySubcategory.2", "subcategory"}}),
+		    #"Zmieniono pierwszą literę każdego wyrazu na wielką" = Table.TransformColumns(#"Zmieniono nazwy kolumn",{{"subcategory", Text.Proper, type text}})
+		in
+		    #"Zmieniono pierwszą literę każdego wyrazu na wielką"
+	lineageTag: 7014827d-bb43-4d27-8fda-42935f5d4521
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression order_line_items =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    order_line_items_Sheet = Źródło{[Item="order_line_items",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(order_line_items_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"LineID", type text}, {"OrderID", type text}, {"ProductName", type text}, {"Quantity", Int64.Type}, {"UnitPrice", type number}, {"UnitCost", type number}, {"DiscountPct", type number}, {"LineTotal", type number}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 38d940e4-c9e6-485e-a48d-bd995c624309
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression ORDERS_2026 =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    ORDERS_2026_Sheet = Źródło{[Item="ORDERS_2026",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(ORDERS_2026_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"OrderID", type text}, {"CustomerName", type text}, {"CustomerCity", type text}, {"RegionName", type text}, {"ShipToCity", type text}, {"BillToCity", type text}, {"OrderDate", type datetime}, {"OrderChannel", Int64.Type}, {"Status", type text}, {"Priority", type text}, {"OrderTotal", type number}, {"OrderNotes", type text}, {"GiftMessage", type any}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: a0ea1d9c-211e-4602-9346-328d9d53a048
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression ORDERS_2025 =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    ORDERS_2025_Sheet = Źródło{[Item="ORDERS_2025",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(ORDERS_2025_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"OrderID", type text}, {"LegacyRef", type text}, {"CustomerName", type text}, {"CustomerCity", type text}, {"RegionName", type text}, {"ShipToCity", type text}, {"BillToCity", type text}, {"OrderDate", type datetime}, {"OrderChannel", Int64.Type}, {"Status", type text}, {"Priority", type text}, {"OrderTotal", type number}, {"OrderNotes", type text}, {"GiftMessage", type any}, {"SourceFile", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 83c91fb8-7ea6-4f8d-b9c9-cca332224deb
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression channels =
+		let
+		    Źródło = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMjRQ0lHyz8vJzEtVCC7JL0pVitWJVjICiQalliRm5igEJBaV5KUWgcWNQeLhGfk5qcWJORClJiAht8zUnBSFYLBYLAA=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [channel_code = _t, channel_name = _t]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(Źródło,{{"channel_code", Int64.Type}, {"channel_name", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: d9782f06-0a25-44f4-9e7a-c0bb9bc79d2d
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression inventory =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    inventory_Sheet = Źródło{[Item="inventory",Kind="Sheet"]}[Data],
+		    #"Zmieniono typ" = Table.TransformColumnTypes(inventory_Sheet,{{"Column1", type text}, {"Column2", type any}, {"Column3", type any}, {"Column4", type any}, {"Column5", type any}, {"Column6", type any}, {"Column7", type any}, {"Column8", type any}, {"Column9", type any}, {"Column10", type any}, {"Column11", type any}, {"Column12", type any}, {"Column13", type any}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: ed3fa6ba-6668-4eb8-afba-b4d15f4e9513
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression orders =
+		let
+		    Źródło = Table.Combine({ORDERS_2025, ORDERS_2026}),
+		    #"Usunięto kolumny" = Table.RemoveColumns(Źródło,{"LegacyRef", "SourceFile", "GiftMessage", "OrderNotes"})
+		in
+		    #"Usunięto kolumny"
+	lineageTag: 436d0644-1780-4f25-9354-16e5a494e653
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression CAMPAIGN_LOG =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    CAMPAIGN_LOG_Sheet = Źródło{[Item="CAMPAIGN_LOG",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(CAMPAIGN_LOG_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"CampaignName", type text}, {"Channel", type text}, {"StartDate", type date}, {"EndDate", type date}, {"Budget", Int64.Type}, {"Date", type date}, {"Impressions", Int64.Type}, {"Clicks", Int64.Type}, {"Spend", type number}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 2a6b83fa-371d-4d9c-bfff-8fc8e918bc8d
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression campaign_skus =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    campaign_skus_Sheet = Źródło{[Item="campaign_skus",Kind="Sheet"]}[Data],
+		    #"Zmieniono typ" = Table.TransformColumnTypes(campaign_skus_Sheet,{{"Column1", type text}, {"Column2", type text}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 03be4972-9ba8-41c6-92b6-c63b7eaa2286
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression invoice_lines =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    invoice_lines_Sheet = Źródło{[Item="invoice_lines",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(invoice_lines_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"InvoiceLineID", type text}, {"InvoiceID", type text}, {"ProductName", type text}, {"Amount", type number}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 49915951-6cec-49e7-a09c-0a495283de19
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression INVOICES =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    INVOICES_Sheet = Źródło{[Item="INVOICES",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(INVOICES_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"InvoiceID", type text}, {"OrderID", type text}, {"CustomerName", type text}, {"InvoiceDate", type date}, {"Amount", type number}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: bd99f339-fecf-4161-9af1-211fbcd8f0f6
+	queryGroup: 01_Stage
+
+	annotation PBI_ResultType = Table
+
+expression payments =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    payments_Sheet = Źródło{[Item="payments",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(payments_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"PaymentID", type text}, {"InvoiceID", type text}, {"CustomerName", type text}, {"PayDate", type date}, {"Amount", type number}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 911288d2-42af-4ad9-9ae1-3f9130abbb3f
+	queryGroup: 01_Stage
+
+	annotation PBI_ResultType = Table
+
+expression shipments =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    shipments_Sheet = Źródło{[Item="shipments",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(shipments_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"ShipmentID", type text}, {"OrderID", type text}, {"ShipMode", type text}, {"ShipDate", type date}, {"DeliveryDate", type date}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 4f3a78c9-9eb3-4b18-8ff2-7d6f6dda5ca1
+	queryGroup: 01_Stage
+
+	annotation PBI_ResultType = Table
+
+expression exchange_rates =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    exchange_rates_Sheet = Źródło{[Item="exchange_rates",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(exchange_rates_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"Currency", type text}, {"Rate", type number}, {"Date", type date}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 84958207-b650-491f-8bfd-07a56b368893
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
+expression sales_targets =
+		let
+		    Źródło = Excel.Workbook(File.Contents("C:\Users\Justi\Desktop\powerbi\powerbi-ultimate-course\powerbi-ultimate-course\project_nightmare_datamodel\dataset.xlsx"), null, true),
+		    sales_targets_Sheet = Źródło{[Item="sales_targets",Kind="Sheet"]}[Data],
+		    #"Nagłówki o podwyższonym poziomie" = Table.PromoteHeaders(sales_targets_Sheet, [PromoteAllScalars=true]),
+		    #"Zmieniono typ" = Table.TransformColumnTypes(#"Nagłówki o podwyższonym poziomie",{{"Period", type date}, {"TargetRevenue", Int64.Type}})
+		in
+		    #"Zmieniono typ"
+	lineageTag: 96c3b37e-b7ae-4c84-a725-b4513cdc57aa
+	queryGroup: 01_Stage
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+
